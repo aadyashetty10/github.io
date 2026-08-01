@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aadya Shetty — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #fbf6f2;
+    --card: #ffffff;
+    --card-border: #e9dfd8;
+    --text: #241f1c;
+    --text-soft: #6b6259;
+    --text-faint: #a89e94;
+    --accent: #d6336c;
+    --accent-soft: #fbe4ec;
+    --accent-border: #f6c6d8;
+    --chip-bg: #f6f1eb;
+    --chip-border: #e9dfd8;
+    --dark-pill: #241f1c;
+    --shadow: 0 20px 50px -25px rgba(60, 40, 30, 0.25);
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 9px;
+  }
+  [data-theme="dark"]{
+    --bg: #17130f;
+    --card: #211c17;
+    --card-border: #382f27;
+    --text: #f3ece5;
+    --text-soft: #b8ab9f;
+    --text-faint: #7c7167;
+    --accent: #ec6a9a;
+    --accent-soft: #3a1d29;
+    --accent-border: #5b2a3c;
+    --chip-bg: #2a231d;
+    --chip-border: #3a3128;
+    --dark-pill: #f3ece5;
+    --shadow: 0 20px 50px -25px rgba(0,0,0,0.6);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition: background .35s ease, color .35s ease;
+    padding: 40px 16px 80px;
+  }
+  h1,h2,h3{ font-family: 'Playfair Display', serif; margin:0; }
+  a{ color: inherit; text-decoration: none; }
+  .wrap{ max-width: 840px; margin: 0 auto; }
+
+  .card{
+    background: var(--card);
+    border: 1.5px dashed var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ---------- Banner ---------- */
+  .banner{
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 210px;
+  }
+  .banner svg{ width:100%; height:100%; display:block; }
+
+  .profile-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: -46px;
+    padding: 0 6px;
+    position: relative;
+    z-index: 2;
+  }
+  .avatar{
+    width: 92px; height: 92px;
+    border-radius: 50%;
+    background: #ffe6cf;
+    border: 4px solid var(--card);
+    box-shadow: 0 6px 18px rgba(0,0,0,.15);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 30px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: #b5622f;
+    flex-shrink:0;
+  }
+  .header-actions{ display:flex; gap:10px; padding-bottom: 6px; }
+  .btn{
+    font-family:'Inter'; font-weight:600; font-size: 13.5px;
+    padding: 10px 16px; border-radius: 999px; border: none;
+    cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    transition: transform .15s ease, opacity .15s ease;
+  }
+  .btn:hover{ transform: translateY(-1px); }
+  .btn-dark{ background: var(--dark-pill); color: var(--bg); }
+  .btn-outline{ background: transparent; color: var(--text); border: 1.5px solid var(--card-border); }
+
+  /* ---------- Identity ---------- */
+  .identity{ padding: 20px 8px 0; }
+  .name-row{ display:flex; justify-content: space-between; align-items:flex-start; flex-wrap: wrap; gap: 8px;}
+  .name{ font-size: 30px; font-weight: 600; display:flex; align-items:center; gap: 8px;}
+  .verified{ color:#3897f0; font-size: 18px; }
+  .views{ color: var(--text-faint); font-size: 13px; display:flex; align-items:center; gap:5px; white-space:nowrap;}
+  .role{
+    color: var(--accent); font-weight:600; font-size: 17px; margin-top: 4px;
+    font-family: 'Playfair Display', serif; font-style: italic;
+    min-height: 24px;
+  }
+  .role .cursor{ display:inline-block; width:1px; background: var(--accent); margin-left:2px; animation: blink 1s step-end infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+  .location{ color: var(--text-faint); font-size: 13.5px; margin-top: 6px; }
+
+  /* ---------- Section heading ---------- */
+  .section{ padding: 34px 8px 0; }
+  .section h2{ font-size: 23px; font-weight: 600; margin-bottom: 14px; }
+  .bio p{ color: var(--text-soft); line-height: 1.75; font-size: 15px; margin: 0 0 12px; }
+  .bio b{ color: var(--text); }
+
+  /* ---------- Tech stack ---------- */
+  .stack-scroll{
+    display:flex; gap:10px; overflow-x:auto; padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .stack-scroll::-webkit-scrollbar{ display:none; }
+  .chip{
+    flex-shrink:0;
+    display:flex; align-items:center; gap:7px;
+    background: var(--chip-bg); border: 1px solid var(--chip-border);
+    padding: 9px 15px; border-radius: 999px; font-size: 13.5px; font-weight:500;
+    white-space: nowrap;
+  }
+
+  /* ---------- Freelancing ---------- */
+  .free-box{
+    background: var(--accent-soft);
+    border: 1.5px dashed var(--accent-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display:flex; align-items:center; justify-content:space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .free-box p{ margin:0; color: var(--text-soft); font-size: 14.5px; line-height:1.6; max-width: 480px; }
+  .hire-btn{ background: var(--dark-pill); color: var(--bg); flex-shrink:0; }
+
+  /* ---------- Experience ---------- */
+  .exp-list{
+    border: 1.5px dashed var(--card-border);
+    border-radius: var(--radius-md);
+    overflow:hidden;
+  }
+  details.exp-item{ border-bottom: 1px solid var(--card-border); }
+  details.exp-item:last-child{ border-bottom:none; }
+  details.exp-item summary{
+    list-style: none; cursor:pointer;
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 16px 18px; gap: 10px;
+  }
+  details.exp-item summary::-webkit-details-marker{ display:none; }
+  .exp-title{ font-weight:600; font-size: 15px; }
+  .exp-sub{ color: var(--text-faint); font-size: 13px; margin-top:2px; }
+  .exp-date{ color: var(--text-faint); font-size: 13px; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+  .chev{ transition: transform .25s ease; font-size:11px; }
+  details[open] .chev{ transform: rotate(180deg); }
+  .exp-body{ padding: 0 18px 16px; color: var(--text-soft); font-size: 13.5px; line-height:1.6; }
+
+  /* ---------- GitHub heatmap ---------- */
+  .gh-box{
+    border: 1.5px dashed var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    overflow-x:auto;
+    position: relative;
+  }
+  .gh-scroll{ display:flex; gap:8px; width:max-content; }
+  .gh-daylabels{ display:grid; grid-template-rows: repeat(7, 11px); gap: 3px; margin-top: 17px; margin-right: 2px; }
+  .gh-daylabels span{ font-size:11px; color: var(--text-faint); height:11px; line-height:11px; }
+  .gh-months{ display:flex; font-size:11.5px; color: var(--text-faint); margin-bottom:6px; gap: 3px; }
+  .gh-grid{ display:grid; grid-auto-flow:column; grid-template-rows: repeat(7, 11px); gap: 3px; width:max-content; }
+  .gh-cell{ width:11px; height:11px; border-radius:2px; background: var(--chip-bg); cursor:pointer; }
+  .gh-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:12px; color:var(--text-faint); }
+  .gh-footer a{ color: var(--text-faint); text-decoration: none; }
+  .gh-footer a:hover{ text-decoration: underline; }
+  .legend{ display:flex; align-items:center; gap:4px; }
+  .legend .gh-cell{ width:10px; height:10px; cursor:default; }
+  .gh-tooltip{
+    position:absolute; top: 10px; left: 18px;
+    background: #1c2128; color:#f0f6fc;
+    font-size:12px; font-weight:500;
+    padding: 6px 10px; border-radius: 6px;
+    display:none; pointer-events:none;
+    white-space:nowrap; z-index:5;
+  }
+
+  /* ---------- Footer nav ---------- */
+  .footer-nav{
+    margin-top: 30px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
+    padding: 18px 10px 0;
+    border-top: 1px dashed var(--card-border);
+  }
+  .brand{ font-family:'Playfair Display', serif; font-style:italic; font-size:16px; }
+  .nav-links{ display:flex; align-items:center; gap:20px; font-size:14px; font-weight:500; color: var(--text-soft); flex-wrap: wrap; }
+  .nav-links a.active{ color: var(--text); text-decoration: underline; text-underline-offset:4px; }
+  .theme-toggle{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--card-border);
+    background: var(--chip-bg); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:15px;
+  }
+
+  .socials{
+    display:flex; flex-wrap:wrap; gap:10px; padding: 16px 10px 4px;
+  }
+  .social-pill{
+    display:flex; align-items:center; gap:7px;
+    background: var(--chip-bg); border:1px solid var(--chip-border);
+    padding: 9px 14px; border-radius: 999px; font-size:13.5px; font-weight:500;
+  }
+
+  /* ---------- CTA ---------- */
+  .cta{ text-align:center; padding: 60px 16px 10px; }
+  .cta h2{ font-size: 26px; font-style: italic; font-weight:600; line-height:1.4; }
+  .cta .btn{ margin-top: 22px; }
+  .made-with{ text-align:center; color: var(--text-faint); font-size:13px; margin-top: 22px; }
+  .critters{ text-align:center; font-size: 30px; margin-top: 36px; letter-spacing: 2px; opacity:.9; }
+
+  @media (max-width: 560px){
+    .name{ font-size:24px; }
+    .header-actions{ width:100%; justify-content:flex-start; }
+    .banner{ height: 160px; }
+    .avatar{ width:74px; height:74px; font-size:32px; }
+  }
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+  <div class="card">
+
+    <div class="banner">
+      <svg viewBox="0 0 800 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#cfe0ea"/>
+            <stop offset="55%" stop-color="#f3d9d9"/>
+            <stop offset="100%" stop-color="#f7e6d8"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="210" fill="url(#sky)"/>
+        <!-- trunk -->
+        <path d="M60 210 C70 150 90 120 130 95 C160 78 190 70 220 45" stroke="#5b4438" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <path d="M130 95 C150 80 170 60 165 30" stroke="#5b4438" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M150 82 C175 70 205 66 235 40" stroke="#5b4438" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- blossom clusters -->
+        <g fill="#f2b7cf" opacity="0.9">
+          <circle cx="90" cy="70" r="30"/><circle cx="140" cy="50" r="34"/><circle cx="190" cy="45" r="30"/>
+          <circle cx="230" cy="35" r="26"/><circle cx="270" cy="40" r="22"/><circle cx="60" cy="100" r="24"/>
+          <circle cx="120" cy="30" r="20"/><circle cx="300" cy="55" r="18"/><circle cx="40" cy="60" r="18"/>
+        </g>
+        <g fill="#f7d0e0" opacity="0.85">
+          <circle cx="110" cy="85" r="20"/><circle cx="165" cy="65" r="22"/><circle cx="215" cy="60" r="18"/>
+          <circle cx="255" cy="60" r="16"/><circle cx="80" cy="45" r="16"/>
+        </g>
+        <!-- falling petals -->
+        <g fill="#f2b7cf">
+          <circle cx="340" cy="90" r="4"/><circle cx="410" cy="60" r="3"/><circle cx="470" cy="120" r="4"/>
+          <circle cx="530" cy="45" r="3"/><circle cx="600" cy="90" r="4"/><circle cx="650" cy="30" r="3"/>
+          <circle cx="380" cy="140" r="3"/><circle cx="500" cy="150" r="3"/>
+        </g>
+        <!-- lamp post -->
+        <rect x="705" y="60" width="6" height="150" fill="#3b3630"/>
+        <rect x="685" y="35" width="46" height="34" rx="4" fill="#3b3630"/>
+        <rect x="693" y="42" width="30" height="20" rx="2" fill="#f4c95d" opacity="0.85"/>
+        <path d="M685 35 L708 15 L731 35 Z" fill="#3b3630"/>
+      </svg>
+    </div>
+
+    <div class="profile-row">
+      <div class="avatar">AS</div>
+      <div class="header-actions">
+        <a class="btn btn-dark" href="#projects">View Projects →</a>
+        <a class="btn btn-outline" href="aadya-shetty-resume.pdf" target="_blank">View Resume →</a>
+      </div>
+    </div>
+
+    <div class="identity">
+      <div class="name-row">
+        <div>
+          <div class="name">Aadya Shetty <span class="verified">✔️</span></div>
+          <div class="role"><span id="roleText"></span><span class="cursor">&nbsp;</span></div>
+          <div class="location">Bengaluru, India</div>
+        </div>
+        <div class="views">👁 1,257</div>
+      </div>
+    </div>
+
+    <div class="section bio">
+      <h2>Who is Aadya?</h2>
+      <p>I'm a <b>full-stack developer</b> who likes building things end to end — from REST APIs and databases to the interfaces people actually touch. I especially enjoy projects where <b>software meets machine learning</b>, whether that's a behavior-prediction model or an OCR pipeline parsing a messy restaurant bill.</p>
+      <p>Currently pursuing my <b>B.Tech in Computer Science</b> at RV Institute of Technology and Management, Bengaluru <b>(CGPA 8.6)</b>, with a growing interest in <b>computer vision</b> and applied ML alongside my core web development work.</p>
+    </div>
+
+    <div class="section">
+      <h2>Tech Stack</h2>
+      <div class="stack-scroll">
+        <span class="chip">🐍 Python</span>
+        <span class="chip">☕ Java</span>
+        <span class="chip">🟨 JavaScript</span>
+        <span class="chip">🗄️ SQL</span>
+        <span class="chip">⚛️ React.js</span>
+        <span class="chip">🟩 Node.js</span>
+        <span class="chip">🍃 MongoDB</span>
+        <span class="chip">💨 Tailwind CSS</span>
+        <span class="chip">👁️ OpenCV</span>
+        <span class="chip">🔢 NumPy</span>
+        <span class="chip">🧠 TensorFlow</span>
+        <span class="chip">📦 Git</span>
+        <span class="chip">🐙 GitHub</span>
+        <span class="chip">🎨 Figma</span>
+      </div>
+    </div>
+
+    <div class="section" id="projects">
+      <h2>Projects</h2>
+      <div class="exp-list">
+        <details class="exp-item" open>
+          <summary>
+            <div>
+              <div class="exp-title">AI-Based Gaming Behavior Prediction &amp; Monitoring System</div>
+              <div class="exp-sub">React.js · Node.js · MongoDB · Random Forest · JWT</div>
+            </div>
+            <div class="exp-date">Apr 2026 — May 2026 <span class="chev">▾</span></div>
+          </summary>
+          <div class="exp-body">A full-stack gaming behavior monitoring platform with secure authentication, session tracking, and real-time dashboards. A Random Forest model is integrated via REST APIs to predict user behavior from gameplay patterns, with Express.js + MongoDB + WebSockets powering sessions, predictions, and alerts under JWT-based, role-based access control.</div>
+        </details>
+        <details class="exp-item">
+          <summary>
+            <div>
+              <div class="exp-title">SplitReceipt — AI-Powered Receipt Splitting</div>
+              <div class="exp-sub">React.js · Node.js · OCR.space · Groq LLM · JWT</div>
+            </div>
+            <div class="exp-date">Feb 2026 — Mar 2026 <span class="chev">▾</span></div>
+          </summary>
+          <div class="exp-body">An OCR + LLM–powered app that parses restaurant bills into structured JSON and splits them proportionally, including tax. Built with an Express REST API on Mongoose schemas, and JWT authentication using refresh tokens stored in HttpOnly cookies.</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>GitHub Activity</h2>
+      <p id="ghTotal" style="color: var(--text-soft); font-size: 14.5px; margin: -6px 0 12px;"></p>
+      <div class="gh-box">
+        <div class="gh-tooltip" id="ghTooltip"></div>
+        <div class="gh-scroll">
+          <div class="gh-daylabels"><span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span></div>
+          <div>
+            <div class="gh-months" id="ghMonths"></div>
+            <div class="gh-grid" id="ghGrid"></div>
+          </div>
+        </div>
+        <div class="gh-footer">
+          <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/viewing-contributions-on-your-profile" target="_blank">Learn how we count contributions</a>
+          <span class="legend">Less
+            <span class="gh-cell" style="background:#ebedf0"></span>
+            <span class="gh-cell" style="background:#f9c9dc"></span>
+            <span class="gh-cell" style="background:#f281ac"></span>
+            <span class="gh-cell" style="background:#e5457f"></span>
+            <span class="gh-cell" style="background:#a3134f"></span>
+            More</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <div class="brand">aadyashetty</div>
+      <div class="nav-links">
+        <a href="#" class="active">Home</a>
+        <a href="#">Projects</a>
+        <a href="#">Skills</a>
+        <a href="mailto:aadyabshetty10@gmail.com">Contact</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </div>
+
+    <div class="socials">
+      <a class="social-pill" href="https://github.com/aadyashetty10" target="_blank">🐙 GitHub</a>
+      <a class="social-pill" href="https://linkedin.com/in/aadya-shetty-86990139b" target="_blank">💼 LinkedIn</a>
+      <a class="social-pill" href="mailto:aadyabshetty10@gmail.com">✉️ Email</a>
+      <a class="social-pill" href="tel:+917204693729">📞 Call</a>
+    </div>
+
+  </div>
+
+  <div class="cta">
+    <h2>Have an idea?<br/>Let's build something together.</h2>
+    <a class="btn btn-dark" href="mailto:aadyabshetty10@gmail.com">Let's Talk →</a>
+    <div class="made-with">Made with 💗 by Aadya Shetty</div>
+  </div>
+
+  <div class="critters">🐱 🐹 🐶 🐸 👽 🦁 🐘</div>
+</div>
+
+<script>
+  // ---- Typing role animation ----
+  const roles = ["Full-Stack Developer", "CS Undergrad @ RVITM", "ML & Computer Vision Enthusiast"];
+  const roleEl = document.getElementById('roleText');
+  let ri = 0, ci = 0, deleting = false;
+
+  function tick(){
+    const word = roles[ri];
+    if(!deleting){
+      ci++;
+      roleEl.textContent = word.slice(0, ci);
+      if(ci === word.length){ deleting = true; setTimeout(tick, 1400); return; }
+    } else {
+      ci--;
+      roleEl.textContent = word.slice(0, ci);
+      if(ci === 0){ deleting = false; ri = (ri+1) % roles.length; }
+    }
+    setTimeout(tick, deleting ? 45 : 85);
+  }
+  tick();
+
+  // ---- GitHub contribution heatmap (live data, pink scale) ----
+  const grid = document.getElementById('ghGrid');
+  const monthsRow = document.getElementById('ghMonths');
+  const tooltip = document.getElementById('ghTooltip');
+  const totalLabel = document.getElementById('ghTotal');
+  const GITHUB_USERNAME = 'aadyashetty10';
+  const colors = ['#ebedf0', '#f9c9dc', '#f281ac', '#e5457f', '#a3134f'];
+
+  function renderHeatmap(contributions, totalCount) {
+    grid.innerHTML = '';
+    monthsRow.innerHTML = '';
+
+    const cells = [];
+    const firstDate = new Date(contributions[0].date + 'T00:00:00');
+    const startPad = firstDate.getDay(); // 0 = Sunday
+    for (let i = 0; i < startPad; i++) cells.push(null);
+    contributions.forEach(c => cells.push(c));
+    while (cells.length % 7 !== 0) cells.push(null);
+
+    const weeks = cells.length / 7;
+    let lastMonthLabel = '';
+
+    for (let w = 0; w < weeks; w++) {
+      let weekDate = null;
+      for (let d = 0; d < 7; d++) {
+        const c = cells[w * 7 + d];
+        if (c) { weekDate = new Date(c.date + 'T00:00:00'); break; }
+      }
+      const span = document.createElement('span');
+      span.style.width = '14px';
+      if (weekDate) {
+        const label = weekDate.toLocaleDateString('en-US', { month: 'short' });
+        if (label !== lastMonthLabel && weekDate.getDate() <= 7) {
+          span.textContent = label;
+          lastMonthLabel = label;
+        }
+      }
+      monthsRow.appendChild(span);
+
+      for (let d = 0; d < 7; d++) {
+        const c = cells[w * 7 + d];
+        const cell = document.createElement('div');
+        cell.className = 'gh-cell';
+
+        if (!c) {
+          cell.style.visibility = 'hidden';
+          grid.appendChild(cell);
+          continue;
+        }
+
+        cell.style.background = colors[c.level];
+        const dateStr = new Date(c.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+        const text = c.count === 0
+          ? `No contributions on ${dateStr}.`
+          : `${c.count} contribution${c.count === 1 ? '' : 's'} on ${dateStr}.`;
+
+        cell.addEventListener('mouseenter', () => {
+          tooltip.textContent = text;
+          tooltip.style.display = 'block';
+        });
+        cell.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+        });
+
+        grid.appendChild(cell);
+      }
+    }
+
+    totalLabel.textContent = totalCount + ' contributions in the last year';
+  }
+
+  async function loadContributions() {
+    try {
+      const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${GITHUB_USERNAME}?y=last`);
+      if (!res.ok) throw new Error('request failed');
+      const data = await res.json();
+      const total = Object.values(data.total || {}).reduce((a, b) => a + b, 0);
+      renderHeatmap(data.contributions, total);
+    } catch (err) {
+      totalLabel.textContent = "Couldn't load live GitHub activity — check your connection or username.";
+    }
+  }
+
+  loadContributions();
+
+  // ---- Theme toggle ----
+  const toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', () => {
+    const body = document.body;
+    const isDark = body.getAttribute('data-theme') === 'dark';
+    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    toggle.textContent = isDark ? '🌙' : '☀️';
+  });
+</script>
+</body>
+</html>
