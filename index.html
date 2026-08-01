@@ -42,7 +42,7 @@
   }
   *{ box-sizing: border-box; }
   html{ scroll-behavior: smooth; }
-  html,body{ margin:0; padding:0; }
+  html,body{ margin:0; padding:0; overflow-x: hidden; }
   body{
     background: var(--bg);
     color: var(--text);
@@ -53,7 +53,51 @@
   }
   h1,h2,h3{ font-family: 'Playfair Display', serif; margin:0; }
   a{ color: inherit; text-decoration: none; }
-  .wrap{ max-width: 840px; margin: 0 auto; }
+  .wrap{ max-width: 840px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .page-petals{
+    position: fixed; inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .page-petal{
+    position: absolute;
+    top: -20px;
+    border-radius: 60% 0 60% 0;
+    background: #f2b7cf;
+    opacity: .8;
+    animation: petalFall linear forwards;
+  }
+  [data-theme="dark"] .page-petal{ background: #d9679b; opacity: .55; }
+  @keyframes petalFall{
+    0%{ transform: translate(0, -20px) rotate(0deg); opacity:0; }
+    8%{ opacity:.85; }
+    92%{ opacity:.85; }
+    100%{ transform: translate(var(--sway, 60px), 108vh) rotate(320deg); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .page-petals{ display:none; }
+  }
+
+  /* ---------- Motion ---------- */
+  @keyframes fadeUp{ from{ opacity:0; transform: translateY(18px); } to{ opacity:1; transform: translateY(0); } }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes floatPetal{
+    0%{ transform: translate(0,-10px) rotate(0deg); opacity:0; }
+    10%{ opacity:1; }
+    90%{ opacity:1; }
+    100%{ transform: translate(var(--drift,20px), 230px) rotate(200deg); opacity:0; }
+  }
+  @keyframes popIn{ from{ opacity:0; transform: scale(.8); } to{ opacity:1; transform: scale(1); } }
+  @keyframes pulseSoft{ 0%,100%{ box-shadow: 0 0 0 0 rgba(214,51,108,.25);} 50%{ box-shadow: 0 0 0 8px rgba(214,51,108,0);} }
+
+  .reveal{ opacity:0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.is-visible{ opacity:1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  }
 
   .card{
     background: var(--card);
@@ -61,6 +105,7 @@
     border-radius: var(--radius-lg);
     padding: 14px;
     box-shadow: var(--shadow);
+    animation: fadeIn .5s ease;
   }
 
   /* ---------- Banner ---------- */
@@ -70,7 +115,14 @@
     overflow: hidden;
     height: 210px;
   }
-  .banner svg{ width:100%; height:100%; display:block; }
+  .banner svg, .banner video{ width:100%; height:100%; display:block; object-fit: cover; }
+  .petal{
+    position:absolute; top:-10px;
+    width:8px; height:8px; border-radius: 60% 0 60% 0;
+    background:#f2b7cf;
+    animation: floatPetal linear infinite;
+    pointer-events:none;
+  }
 
   .profile-row{
     display:flex;
@@ -88,20 +140,22 @@
     border: 4px solid var(--card);
     box-shadow: 0 6px 18px rgba(0,0,0,.15);
     display:flex; align-items:center; justify-content:center;
-    font-size: 30px;
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
-    color: #b5622f;
+    overflow: hidden;
     flex-shrink:0;
+    animation: popIn .5s cubic-bezier(.34,1.56,.64,1) .1s both, pulseSoft 3.5s ease-in-out 1.2s infinite;
+    transition: transform .3s ease;
   }
+  .avatar img{ width:100%; height:100%; object-fit: cover; }
+  .avatar:hover{ transform: scale(1.06) rotate(-3deg); }
   .header-actions{ display:flex; gap:10px; padding-bottom: 6px; }
   .btn{
     font-family:'Inter'; font-weight:600; font-size: 13.5px;
     padding: 10px 16px; border-radius: 999px; border: none;
     cursor:pointer; display:inline-flex; align-items:center; gap:6px;
-    transition: transform .15s ease, opacity .15s ease;
+    transition: transform .2s ease, box-shadow .2s ease, opacity .15s ease;
   }
-  .btn:hover{ transform: translateY(-1px); }
+  .btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 20px -8px rgba(0,0,0,.25); }
+  .btn:active{ transform: translateY(0px) scale(.97); }
   .btn-dark{ background: var(--dark-pill); color: var(--bg); }
   .btn-outline{ background: transparent; color: var(--text); border: 1.5px solid var(--card-border); }
 
@@ -138,7 +192,9 @@
     background: var(--chip-bg); border: 1px solid var(--chip-border);
     padding: 9px 15px; border-radius: 999px; font-size: 13.5px; font-weight:500;
     white-space: nowrap;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
   }
+  .chip:hover{ transform: translateY(-3px) scale(1.04); background: var(--accent-soft); border-color: var(--accent-border); }
 
   /* ---------- Freelancing ---------- */
   .free-box{
@@ -163,14 +219,16 @@
     list-style: none; cursor:pointer;
     display:flex; justify-content:space-between; align-items:center;
     padding: 16px 18px; gap: 10px;
+    transition: background .2s ease;
   }
+  details.exp-item summary:hover{ background: var(--chip-bg); }
   details.exp-item summary::-webkit-details-marker{ display:none; }
   .exp-title{ font-weight:600; font-size: 15px; }
   .exp-sub{ color: var(--text-faint); font-size: 13px; margin-top:2px; }
   .exp-date{ color: var(--text-faint); font-size: 13px; display:flex; align-items:center; gap:6px; white-space:nowrap; }
-  .chev{ transition: transform .25s ease; font-size:11px; }
+  .chev{ transition: transform .3s ease; font-size:11px; display:inline-block; }
   details[open] .chev{ transform: rotate(180deg); }
-  .exp-body{ padding: 0 18px 16px; color: var(--text-soft); font-size: 13.5px; line-height:1.6; }
+  .exp-body{ padding: 0 18px 16px; color: var(--text-soft); font-size: 13.5px; line-height:1.6; animation: fadeUp .35s ease; }
 
   /* ---------- GitHub heatmap ---------- */
   .gh-box{
@@ -185,7 +243,8 @@
   .gh-daylabels span{ font-size:11px; color: var(--text-faint); height:11px; line-height:11px; }
   .gh-months{ display:flex; font-size:11.5px; color: var(--text-faint); margin-bottom:6px; gap: 3px; }
   .gh-grid{ display:grid; grid-auto-flow:column; grid-template-rows: repeat(7, 11px); gap: 3px; width:max-content; }
-  .gh-cell{ width:11px; height:11px; border-radius:2px; background: var(--chip-bg); cursor:pointer; }
+  .gh-cell{ width:11px; height:11px; border-radius:2px; background: var(--chip-bg); cursor:pointer; transition: transform .15s ease; animation: fadeIn .8s ease both; }
+  .gh-cell:hover{ transform: scale(1.6); }
   .gh-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:12px; color:var(--text-faint); }
   .gh-footer a{ color: var(--text-faint); text-decoration: none; }
   .gh-footer a:hover{ text-decoration: underline; }
@@ -213,7 +272,9 @@
   .theme-toggle{
     width:34px; height:34px; border-radius:50%; border:1px solid var(--card-border);
     background: var(--chip-bg); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:15px;
+    transition: transform .3s ease;
   }
+  .theme-toggle:hover{ transform: rotate(20deg) scale(1.1); }
 
   .socials{
     display:flex; flex-wrap:wrap; gap:10px; padding: 16px 10px 4px;
@@ -222,14 +283,18 @@
     display:flex; align-items:center; gap:7px;
     background: var(--chip-bg); border:1px solid var(--chip-border);
     padding: 9px 14px; border-radius: 999px; font-size:13.5px; font-weight:500;
+    transition: transform .2s ease, background .2s ease;
   }
+  .social-pill:hover{ transform: translateY(-3px); background: var(--accent-soft); }
 
   /* ---------- CTA ---------- */
   .cta{ text-align:center; padding: 60px 16px 10px; }
   .cta h2{ font-size: 26px; font-style: italic; font-weight:600; line-height:1.4; }
-  .cta .btn{ margin-top: 22px; }
+  .cta .btn{ margin-top: 22px; animation: pulseSoft 2.8s ease-in-out infinite; }
   .made-with{ text-align:center; color: var(--text-faint); font-size:13px; margin-top: 22px; }
   .critters{ text-align:center; font-size: 30px; margin-top: 36px; letter-spacing: 2px; opacity:.9; }
+  .critters span{ display:inline-block; transition: transform .2s ease; }
+  .critters span:hover{ transform: translateY(-8px) scale(1.2) rotate(-6deg); }
 
   @media (max-width: 560px){
     .name{ font-size:24px; }
@@ -240,49 +305,18 @@
 </style>
 </head>
 <body data-theme="light">
+<div class="page-petals" id="pagePetals"></div>
 <div class="wrap">
   <div class="card">
 
     <div class="banner">
-      <svg viewBox="0 0 800 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#cfe0ea"/>
-            <stop offset="55%" stop-color="#f3d9d9"/>
-            <stop offset="100%" stop-color="#f7e6d8"/>
-          </linearGradient>
-        </defs>
-        <rect width="800" height="210" fill="url(#sky)"/>
-        <!-- trunk -->
-        <path d="M60 210 C70 150 90 120 130 95 C160 78 190 70 220 45" stroke="#5b4438" stroke-width="14" fill="none" stroke-linecap="round"/>
-        <path d="M130 95 C150 80 170 60 165 30" stroke="#5b4438" stroke-width="8" fill="none" stroke-linecap="round"/>
-        <path d="M150 82 C175 70 205 66 235 40" stroke="#5b4438" stroke-width="7" fill="none" stroke-linecap="round"/>
-        <!-- blossom clusters -->
-        <g fill="#f2b7cf" opacity="0.9">
-          <circle cx="90" cy="70" r="30"/><circle cx="140" cy="50" r="34"/><circle cx="190" cy="45" r="30"/>
-          <circle cx="230" cy="35" r="26"/><circle cx="270" cy="40" r="22"/><circle cx="60" cy="100" r="24"/>
-          <circle cx="120" cy="30" r="20"/><circle cx="300" cy="55" r="18"/><circle cx="40" cy="60" r="18"/>
-        </g>
-        <g fill="#f7d0e0" opacity="0.85">
-          <circle cx="110" cy="85" r="20"/><circle cx="165" cy="65" r="22"/><circle cx="215" cy="60" r="18"/>
-          <circle cx="255" cy="60" r="16"/><circle cx="80" cy="45" r="16"/>
-        </g>
-        <!-- falling petals -->
-        <g fill="#f2b7cf">
-          <circle cx="340" cy="90" r="4"/><circle cx="410" cy="60" r="3"/><circle cx="470" cy="120" r="4"/>
-          <circle cx="530" cy="45" r="3"/><circle cx="600" cy="90" r="4"/><circle cx="650" cy="30" r="3"/>
-          <circle cx="380" cy="140" r="3"/><circle cx="500" cy="150" r="3"/>
-        </g>
-        <!-- lamp post -->
-        <rect x="705" y="60" width="6" height="150" fill="#3b3630"/>
-        <rect x="685" y="35" width="46" height="34" rx="4" fill="#3b3630"/>
-        <rect x="693" y="42" width="30" height="20" rx="2" fill="#f4c95d" opacity="0.85"/>
-        <path d="M685 35 L708 15 L731 35 Z" fill="#3b3630"/>
-      </svg>
+      <video autoplay muted loop playsinline poster="avatar.png">
+        <source src="banner-blossom.mp4" type="video/mp4">
+      </video>
     </div>
 
     <div class="profile-row">
-      <div class="avatar">AS</div>
+      <div class="avatar"><img src="avatar.png" alt="Aadya's bitmoji" /></div>
       <div class="header-actions">
         <a class="btn btn-dark" href="#projects">View Projects →</a>
         <a class="btn btn-outline" href="aadya-shetty-resume.pdf" target="_blank">View Resume →</a>
@@ -296,17 +330,17 @@
           <div class="role"><span id="roleText"></span><span class="cursor">&nbsp;</span></div>
           <div class="location">Bengaluru, India</div>
         </div>
-        <div class="views">👁 1,257</div>
+        <div class="views">👁 <span id="viewCount">0</span></div>
       </div>
     </div>
 
-    <div class="section bio">
+    <div class="section bio reveal">
       <h2>Who is Aadya?</h2>
       <p>I'm a <b>full-stack developer</b> who likes building things end to end — from REST APIs and databases to the interfaces people actually touch. I especially enjoy projects where <b>software meets machine learning</b>, whether that's a behavior-prediction model or an OCR pipeline parsing a messy restaurant bill.</p>
       <p>Currently pursuing my <b>B.Tech in Computer Science</b> at RV Institute of Technology and Management, Bengaluru <b>(CGPA 8.6)</b>, with a growing interest in <b>computer vision</b> and applied ML alongside my core web development work.</p>
     </div>
 
-    <div class="section">
+    <div class="section reveal">
       <h2>Tech Stack</h2>
       <div class="stack-scroll">
         <span class="chip">🐍 Python</span>
@@ -326,7 +360,7 @@
       </div>
     </div>
 
-    <div class="section" id="projects">
+    <div class="section reveal" id="projects">
       <h2>Projects</h2>
       <div class="exp-list">
         <details class="exp-item" open>
@@ -352,7 +386,7 @@
       </div>
     </div>
 
-    <div class="section">
+    <div class="section reveal">
       <h2>GitHub Activity</h2>
       <p id="ghTotal" style="color: var(--text-soft); font-size: 14.5px; margin: -6px 0 12px;"></p>
       <div class="gh-box">
@@ -403,10 +437,59 @@
     <div class="made-with">Made with 💗 by Aadya Shetty</div>
   </div>
 
-  <div class="critters">🐱 🐹 🐶 🐸 👽 🦁 🐘</div>
+  <div class="critters"><span>🐱</span> <span>🐹</span> <span>🐶</span> <span>🐸</span> <span>👽</span> <span>🦁</span> <span>🐘</span></div>
 </div>
 
 <script>
+  // ---- Ambient page-wide falling petals ----
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReducedMotion) {
+    const petalLayer = document.getElementById('pagePetals');
+    function spawnPetal(){
+      const petal = document.createElement('span');
+      petal.className = 'page-petal';
+      const size = 6 + Math.random() * 8;
+      petal.style.width = size + 'px';
+      petal.style.height = size + 'px';
+      petal.style.left = Math.random() * 100 + 'vw';
+      petal.style.setProperty('--sway', (Math.random() * 120 - 60) + 'px');
+      const duration = 9 + Math.random() * 8;
+      petal.style.animationDuration = duration + 's';
+      petal.addEventListener('animationend', () => petal.remove());
+      petalLayer.appendChild(petal);
+    }
+    // seed a few immediately so it doesn't start empty
+    for (let i = 0; i < 6; i++) setTimeout(spawnPetal, i * 700);
+    setInterval(spawnPetal, 1400);
+  }
+
+  // ---- Scroll-reveal for sections ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ---- Animated view counter ----
+  (function animateViews(){
+    const el = document.getElementById('viewCount');
+    const target = 1257;
+    const duration = 1400;
+    const start = performance.now();
+    function step(now){
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target).toLocaleString('en-US');
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+
   // ---- Typing role animation ----
   const roles = ["Full-Stack Developer", "CS Undergrad @ RVITM", "ML & Computer Vision Enthusiast"];
   const roleEl = document.getElementById('roleText');
@@ -478,6 +561,7 @@
         }
 
         cell.style.background = colors[c.level];
+        cell.style.animationDelay = (w * 0.006) + 's';
         const dateStr = new Date(c.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
         const text = c.count === 0
           ? `No contributions on ${dateStr}.`
