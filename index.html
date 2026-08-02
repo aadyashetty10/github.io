@@ -181,11 +181,23 @@
   .bio b{ color: var(--text); }
 
   /* ---------- Tech stack ---------- */
-  .stack-scroll{
-    display:flex; gap:10px; overflow-x:auto; padding-bottom: 6px;
-    scrollbar-width: none;
+  .stack-marquee{
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   }
-  .stack-scroll::-webkit-scrollbar{ display:none; }
+  .stack-track{
+    display:flex; flex-wrap: nowrap; gap:10px; width:max-content;
+    animation: marquee 22s linear infinite;
+  }
+  .stack-marquee:hover .stack-track{ animation-play-state: paused; }
+  @keyframes marquee{
+    from{ transform: translateX(0); }
+    to{ transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .stack-track{ animation: none; overflow-x:auto; }
+  }
   .chip{
     flex-shrink:0;
     display:flex; align-items:center; gap:7px;
@@ -195,6 +207,7 @@
     transition: transform .2s ease, background .2s ease, border-color .2s ease;
   }
   .chip:hover{ transform: translateY(-3px) scale(1.04); background: var(--accent-soft); border-color: var(--accent-border); }
+  #languages .stack-scroll{ display:flex; flex-wrap: wrap; gap:10px; }
 
   /* ---------- Freelancing ---------- */
   .free-box{
@@ -229,6 +242,20 @@
   .chev{ transition: transform .3s ease; font-size:11px; display:inline-block; }
   details[open] .chev{ transform: rotate(180deg); }
   .exp-body{ padding: 0 18px 16px; color: var(--text-soft); font-size: 13.5px; line-height:1.6; animation: fadeUp .35s ease; }
+  .edu-item{
+    display:flex; justify-content:space-between; align-items:center; gap: 10px;
+    padding: 16px 18px; border-bottom: 1px solid var(--card-border);
+  }
+  .edu-item:last-child{ border-bottom:none; }
+  .edu-score{ color: var(--accent); font-weight:700; }
+  .project-thumb{
+    width:100%; aspect-ratio: 16/8; border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 34px; margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .project-thumb img{ width:100%; height:100%; object-fit: contain; }
+  .project-caption{ font-size: 12px; color: var(--text-faint); font-style: italic; margin: 0 0 10px; }
 
   /* ---------- GitHub heatmap ---------- */
   .gh-box{
@@ -318,6 +345,7 @@
     <div class="profile-row">
       <div class="avatar"><img src="avatar.png" alt="Aadya's bitmoji" /></div>
       <div class="header-actions">
+        <button class="theme-toggle" id="themeToggleTop" aria-label="Toggle dark mode">🌙</button>
         <a class="btn btn-dark" href="#projects">View Projects →</a>
         <a class="btn btn-outline" href="aadya-shetty-resume.pdf" target="_blank">View Resume →</a>
       </div>
@@ -337,26 +365,80 @@
     <div class="section bio reveal">
       <h2>Who is Aadya?</h2>
       <p>I'm a <b>full-stack developer</b> who likes building things end to end — from REST APIs and databases to the interfaces people actually touch. I especially enjoy projects where <b>software meets machine learning</b>, whether that's a behavior-prediction model or an OCR pipeline parsing a messy restaurant bill.</p>
-      <p>Currently pursuing my <b>B.Tech in Computer Science</b> at RV Institute of Technology and Management, Bengaluru <b>(CGPA 8.6)</b>, with a growing interest in <b>computer vision</b> and applied ML alongside my core web development work.</p>
+      <p>Currently pursuing my <b>B.Tech in Computer Science</b> at RV Institute of Technology and Management, Bengaluru <b>(CGPA 8.6)</b>.</p>
     </div>
 
-    <div class="section reveal">
+    <div class="section reveal" id="education">
+      <h2>Education</h2>
+      <div class="exp-list">
+        <div class="edu-item">
+          <div>
+            <div class="exp-title">RV Institute of Technology and Management, Bengaluru</div>
+            <div class="exp-sub">B.Tech in Computer Science and Engineering</div>
+          </div>
+          <div class="exp-date">2023 — 2027<br><span class="edu-score">CGPA 8.6</span></div>
+        </div>
+        <div class="edu-item">
+          <div>
+            <div class="exp-title">Expert PU College, Mangalore</div>
+            <div class="exp-sub">Class 12 (State)</div>
+          </div>
+          <div class="exp-date">2023<br><span class="edu-score">90.0%</span></div>
+        </div>
+        <div class="edu-item">
+          <div>
+            <div class="exp-title">Shri Siddhi Vinayaka Residential School, Kundapura</div>
+            <div class="exp-sub">Class 10 (ICSE)</div>
+          </div>
+          <div class="exp-date">2021<br><span class="edu-score">91.2%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section reveal" id="skills">
       <h2>Tech Stack</h2>
+      <div class="stack-marquee">
+        <div class="stack-track">
+          <span class="chip">🐍 Python</span>
+          <span class="chip">☕ Java</span>
+          <span class="chip">🟨 JavaScript</span>
+          <span class="chip">🗄️ SQL</span>
+          <span class="chip">⚛️ React.js</span>
+          <span class="chip">🟩 Node.js</span>
+          <span class="chip">🍃 MongoDB</span>
+          <span class="chip">💨 Tailwind CSS</span>
+          <span class="chip">👁️ OpenCV</span>
+          <span class="chip">🔢 NumPy</span>
+          <span class="chip">🧠 TensorFlow</span>
+          <span class="chip">📦 Git</span>
+          <span class="chip">🐙 GitHub</span>
+          <span class="chip">🎨 Figma</span>
+          <span class="chip" aria-hidden="true">🐍 Python</span>
+          <span class="chip" aria-hidden="true">☕ Java</span>
+          <span class="chip" aria-hidden="true">🟨 JavaScript</span>
+          <span class="chip" aria-hidden="true">🗄️ SQL</span>
+          <span class="chip" aria-hidden="true">⚛️ React.js</span>
+          <span class="chip" aria-hidden="true">🟩 Node.js</span>
+          <span class="chip" aria-hidden="true">🍃 MongoDB</span>
+          <span class="chip" aria-hidden="true">💨 Tailwind CSS</span>
+          <span class="chip" aria-hidden="true">👁️ OpenCV</span>
+          <span class="chip" aria-hidden="true">🔢 NumPy</span>
+          <span class="chip" aria-hidden="true">🧠 TensorFlow</span>
+          <span class="chip" aria-hidden="true">📦 Git</span>
+          <span class="chip" aria-hidden="true">🐙 GitHub</span>
+          <span class="chip" aria-hidden="true">🎨 Figma</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section reveal" id="languages">
+      <h2>Languages</h2>
       <div class="stack-scroll">
-        <span class="chip">🐍 Python</span>
-        <span class="chip">☕ Java</span>
-        <span class="chip">🟨 JavaScript</span>
-        <span class="chip">🗄️ SQL</span>
-        <span class="chip">⚛️ React.js</span>
-        <span class="chip">🟩 Node.js</span>
-        <span class="chip">🍃 MongoDB</span>
-        <span class="chip">💨 Tailwind CSS</span>
-        <span class="chip">👁️ OpenCV</span>
-        <span class="chip">🔢 NumPy</span>
-        <span class="chip">🧠 TensorFlow</span>
-        <span class="chip">📦 Git</span>
-        <span class="chip">🐙 GitHub</span>
-        <span class="chip">🎨 Figma</span>
+        <span class="chip">🇬🇧 English</span>
+        <span class="chip">🇮🇳 Hindi</span>
+        <span class="chip">🇮🇳 Kannada</span>
+        <span class="chip">🇮🇳 Marathi</span>
+        <span class="chip">🇪🇸 Spanish</span>
       </div>
     </div>
 
@@ -371,7 +453,11 @@
             </div>
             <div class="exp-date">Apr 2026 — May 2026 <span class="chev">▾</span></div>
           </summary>
-          <div class="exp-body">A full-stack gaming behavior monitoring platform with secure authentication, session tracking, and real-time dashboards. A Random Forest model is integrated via REST APIs to predict user behavior from gameplay patterns, with Express.js + MongoDB + WebSockets powering sessions, predictions, and alerts under JWT-based, role-based access control.</div>
+          <div class="exp-body">
+            <div class="project-thumb" style="background:#150c10;"><img src="project-gaming.png" alt="Gaming behavior prediction visual"></div>
+            <p class="project-caption">Behavior risk-prediction concept</p>
+            A full-stack gaming behavior monitoring platform with secure authentication, session tracking, and real-time dashboards. A Random Forest model is integrated via REST APIs to predict user behavior from gameplay patterns, with Express.js + MongoDB + WebSockets powering sessions, predictions, and alerts under JWT-based, role-based access control.
+          </div>
         </details>
         <details class="exp-item">
           <summary>
@@ -381,7 +467,11 @@
             </div>
             <div class="exp-date">Feb 2026 — Mar 2026 <span class="chev">▾</span></div>
           </summary>
-          <div class="exp-body">An OCR + LLM–powered app that parses restaurant bills into structured JSON and splits them proportionally, including tax. Built with an Express REST API on Mongoose schemas, and JWT authentication using refresh tokens stored in HttpOnly cookies.</div>
+          <div class="exp-body">
+            <div class="project-thumb" style="background:#fdeef4;"><img src="project-splitreceipt.png" alt="SplitReceipt logo"></div>
+            <p class="project-caption">SplitReceipt</p>
+            An OCR + LLM–powered app that parses restaurant bills into structured JSON and splits them proportionally, including tax. Built with an Express REST API on Mongoose schemas, and JWT authentication using refresh tokens stored in HttpOnly cookies.
+          </div>
         </details>
       </div>
     </div>
@@ -415,8 +505,8 @@
       <div class="brand">aadyashetty</div>
       <div class="nav-links">
         <a href="#" class="active">Home</a>
-        <a href="#">Projects</a>
-        <a href="#">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
         <a href="mailto:aadyabshetty10@gmail.com">Contact</a>
       </div>
       <button class="theme-toggle" id="themeToggle">🌙</button>
@@ -491,7 +581,7 @@
   })();
 
   // ---- Typing role animation ----
-  const roles = ["Full-Stack Developer", "CS Undergrad @ RVITM", "ML & Computer Vision Enthusiast"];
+  const roles = ["Software Developer", "CS Undergrad @ RVITM"];
   const roleEl = document.getElementById('roleText');
   let ri = 0, ci = 0, deleting = false;
 
@@ -596,13 +686,18 @@
 
   loadContributions();
 
-  // ---- Theme toggle ----
-  const toggle = document.getElementById('themeToggle');
-  toggle.addEventListener('click', () => {
-    const body = document.body;
-    const isDark = body.getAttribute('data-theme') === 'dark';
-    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    toggle.textContent = isDark ? '🌙' : '☀️';
+  // ---- Theme toggle (header + footer, kept in sync) ----
+  const toggles = [document.getElementById('themeToggleTop'), document.getElementById('themeToggle')];
+  function setTheme(isDark){
+    document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    toggles.forEach(t => { if (t) t.textContent = isDark ? '☀️' : '🌙'; });
+  }
+  toggles.forEach(t => {
+    if (!t) return;
+    t.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      setTheme(!isDark);
+    });
   });
 </script>
 </body>
