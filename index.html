@@ -226,22 +226,25 @@
     border-radius: var(--radius-md);
     overflow:hidden;
   }
-  details.exp-item{ border-bottom: 1px solid var(--card-border); }
-  details.exp-item:last-child{ border-bottom:none; }
-  details.exp-item summary{
-    list-style: none; cursor:pointer;
+  .exp-item{ border-bottom: 1px solid var(--card-border); }
+  .exp-item:last-child{ border-bottom:none; }
+  .exp-header{
     display:flex; justify-content:space-between; align-items:center;
-    padding: 16px 18px; gap: 10px;
-    transition: background .2s ease;
+    padding: 16px 18px 4px; gap: 10px;
   }
-  details.exp-item summary:hover{ background: var(--chip-bg); }
-  details.exp-item summary::-webkit-details-marker{ display:none; }
   .exp-title{ font-weight:600; font-size: 15px; }
   .exp-sub{ color: var(--text-faint); font-size: 13px; margin-top:2px; }
   .exp-date{ color: var(--text-faint); font-size: 13px; display:flex; align-items:center; gap:6px; white-space:nowrap; }
-  .chev{ transition: transform .3s ease; font-size:11px; display:inline-block; }
-  details[open] .chev{ transform: rotate(180deg); }
-  .exp-body{ padding: 0 18px 16px; color: var(--text-soft); font-size: 13.5px; line-height:1.6; animation: fadeUp .35s ease; }
+  .exp-body{ padding: 0 18px 18px; color: var(--text-soft); font-size: 13.5px; line-height:1.6; }
+  .project-link{
+    display:inline-flex; align-items:center; gap:6px;
+    margin-top: 12px;
+    font-family:'Inter'; font-weight:600; font-size: 12.5px;
+    padding: 7px 13px; border-radius: 999px;
+    background: var(--chip-bg); border: 1px solid var(--chip-border); color: var(--text);
+    transition: transform .2s ease, background .2s ease;
+  }
+  .project-link:hover{ transform: translateY(-2px); background: var(--accent-soft); border-color: var(--accent-border); }
   .edu-item{
     display:flex; justify-content:space-between; align-items:center; gap: 10px;
     padding: 16px 18px; border-bottom: 1px solid var(--card-border);
@@ -329,9 +332,108 @@
     .banner{ height: 160px; }
     .avatar{ width:74px; height:74px; font-size:32px; }
   }
+
+  /* ---------- Intro / loading screen ---------- */
+  #introOverlay{
+    position: fixed; inset: 0;
+    z-index: 200;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(214,51,108,0.14) 1px, transparent 0) 0 0/22px 22px,
+      linear-gradient(160deg, #2b1620, #1c1016 55%, #150c10);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    transition: opacity .9s cubic-bezier(.65,0,.35,1);
+  }
+  #introOverlay.intro-hidden{ opacity:0; pointer-events:none; }
+  .intro-petals{
+    position:absolute; inset:0;
+    pointer-events:none; overflow:hidden;
+  }
+  .intro-petal{
+    position:absolute; top:-16px;
+    border-radius: 60% 0 60% 0;
+    background: #f6c7d8;
+    opacity: .85;
+    animation: petalFall linear forwards;
+  }
+
+  .intro-stage{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding: 24px;
+    opacity:0; transform: translateY(14px) scale(.98);
+    transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
+    pointer-events:none;
+  }
+  .intro-stage.is-active{ opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
+
+  #introStage1 .intro-hi{
+    font-family:'Playfair Display', serif; font-style: italic;
+    font-size: clamp(24px, 5vw, 38px);
+    color: #f3ece5;
+  }
+  #introStage1 .intro-hi b{ color: #f6a8c4; font-style: normal; }
+
+  .intro-progress{ margin-top: 34px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .intro-percent{
+    font-family:'Playfair Display', serif; font-weight:700;
+    font-size: clamp(36px, 8vw, 56px);
+    background: linear-gradient(180deg, #ffffff, #d99cb4);
+    -webkit-background-clip: text; background-clip:text; color: transparent;
+    font-variant-numeric: tabular-nums;
+  }
+  .intro-bar{ width: 220px; height: 3px; border-radius: 999px; background: rgba(246,199,216,.18); overflow:hidden; }
+  .intro-bar-fill{ height:100%; width:0%; background: linear-gradient(90deg, #d99cb4, #f6c7d8); border-radius:999px; }
+
+  .intro-badge{
+    display:inline-block; padding: 7px 16px; border-radius:999px;
+    border: 1px solid rgba(246,199,216,.35);
+    color: #e9b9cc; font-size: 11.5px; font-weight:700; letter-spacing: 2px;
+    margin-bottom: 22px; text-transform: uppercase;
+  }
+  .intro-headline{
+    font-family:'Playfair Display', serif; font-weight:700;
+    font-size: clamp(38px, 9vw, 76px);
+    line-height: 1.05;
+    background: linear-gradient(180deg, #ffffff, #d99cb4);
+    -webkit-background-clip: text; background-clip:text; color: transparent;
+    margin: 0 0 20px;
+  }
+  .intro-tagline{
+    max-width: 520px; color: #cbb9c0; font-size: 14.5px; line-height:1.7;
+    margin: 0 0 30px;
+  }
+  .intro-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background: #f6ecef; color:#1c1016;
+    font-family:'Inter'; font-weight:700; font-size:14px;
+    padding: 13px 26px; border-radius:999px; border:none; cursor:pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .intro-btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 24px -10px rgba(0,0,0,.5); }
+
+  html.intro-locked, body.intro-locked{ overflow: hidden; height: 100%; }
 </style>
 </head>
 <body data-theme="light">
+<div id="introOverlay">
+  <div class="intro-petals" id="introPetals"></div>
+
+  <div class="intro-stage is-active" id="introStage1">
+    <div class="intro-hi">Hi, I'm <b>Aadya Shetty.</b></div>
+    <div class="intro-progress">
+      <div class="intro-percent" id="introPercent">0%</div>
+      <div class="intro-bar"><div class="intro-bar-fill" id="introBarFill"></div></div>
+    </div>
+  </div>
+
+  <div class="intro-stage" id="introStage2">
+    <span class="intro-badge">Aadya Shetty</span>
+    <h1 class="intro-headline">Software<br/>Developer.</h1>
+    <p class="intro-tagline">Full-stack developer focused on clean architecture and thoughtful UI — turning ideas into real, working products, from REST APIs to the interfaces people actually use.</p>
+    <button class="intro-btn" id="showPortfolioBtn">Show Portfolio →</button>
+  </div>
+</div>
 <div class="page-petals" id="pagePetals"></div>
 <div class="wrap">
   <div class="card">
@@ -445,34 +547,35 @@
     <div class="section reveal" id="projects">
       <h2>Projects</h2>
       <div class="exp-list">
-        <details class="exp-item" open>
-          <summary>
+        <div class="exp-item">
+          <div class="exp-header">
             <div>
               <div class="exp-title">AI-Based Gaming Behavior Prediction &amp; Monitoring System</div>
               <div class="exp-sub">React.js · Node.js · MongoDB · Random Forest · JWT</div>
             </div>
-            <div class="exp-date">Apr 2026 — May 2026 <span class="chev">▾</span></div>
-          </summary>
+            <div class="exp-date">Apr 2026 — May 2026</div>
+          </div>
           <div class="exp-body">
             <div class="project-thumb" style="background:#150c10;"><img src="project-gaming.png" alt="Gaming behavior prediction visual"></div>
             <p class="project-caption">Behavior risk-prediction concept</p>
             A full-stack gaming behavior monitoring platform with secure authentication, session tracking, and real-time dashboards. A Random Forest model is integrated via REST APIs to predict user behavior from gameplay patterns, with Express.js + MongoDB + WebSockets powering sessions, predictions, and alerts under JWT-based, role-based access control.
           </div>
-        </details>
-        <details class="exp-item">
-          <summary>
+        </div>
+        <div class="exp-item">
+          <div class="exp-header">
             <div>
               <div class="exp-title">SplitReceipt — AI-Powered Receipt Splitting</div>
               <div class="exp-sub">React.js · Node.js · OCR.space · Groq LLM · JWT</div>
             </div>
-            <div class="exp-date">Feb 2026 — Mar 2026 <span class="chev">▾</span></div>
-          </summary>
+            <div class="exp-date">Feb 2026 — Mar 2026</div>
+          </div>
           <div class="exp-body">
             <div class="project-thumb" style="background:#fdeef4;"><img src="project-splitreceipt.png" alt="SplitReceipt logo"></div>
             <p class="project-caption">SplitReceipt</p>
             An OCR + LLM–powered app that parses restaurant bills into structured JSON and splits them proportionally, including tax. Built with an Express REST API on Mongoose schemas, and JWT authentication using refresh tokens stored in HttpOnly cookies.
+            <a class="project-link" href="https://billwise-psi.vercel.app/" target="_blank">🔗 SplitReceipt — AI Bill Splitter</a>
           </div>
-        </details>
+        </div>
       </div>
     </div>
 
@@ -531,6 +634,68 @@
 </div>
 
 <script>
+  // ---- Intro / loading screen ----
+  document.documentElement.classList.add('intro-locked');
+  document.body.classList.add('intro-locked');
+
+  const introOverlay = document.getElementById('introOverlay');
+  const introStage1 = document.getElementById('introStage1');
+  const introStage2 = document.getElementById('introStage2');
+  const showPortfolioBtn = document.getElementById('showPortfolioBtn');
+  const introPercent = document.getElementById('introPercent');
+  const introBarFill = document.getElementById('introBarFill');
+  const introPetals = document.getElementById('introPetals');
+
+  let introPetalTimer = null;
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    function spawnIntroPetal(){
+      const petal = document.createElement('span');
+      petal.className = 'intro-petal';
+      const size = 6 + Math.random() * 8;
+      petal.style.width = size + 'px';
+      petal.style.height = size + 'px';
+      petal.style.left = Math.random() * 100 + '%';
+      petal.style.setProperty('--sway', (Math.random() * 120 - 60) + 'px');
+      const duration = 6 + Math.random() * 5;
+      petal.style.animationDuration = duration + 's';
+      petal.addEventListener('animationend', () => petal.remove());
+      introPetals.appendChild(petal);
+    }
+    for (let i = 0; i < 8; i++) setTimeout(spawnIntroPetal, i * 250);
+    introPetalTimer = setInterval(spawnIntroPetal, 550);
+  }
+
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  const loadDuration = 2000;
+  const loadStart = performance.now();
+
+  function tickLoader(now){
+    const raw = Math.min((now - loadStart) / loadDuration, 1);
+    const eased = easeOutCubic(raw);
+    const pct = Math.round(eased * 100);
+    introPercent.textContent = pct + '%';
+    introBarFill.style.width = pct + '%';
+
+    if (raw < 1) {
+      requestAnimationFrame(tickLoader);
+    } else {
+      setTimeout(() => {
+        introStage1.classList.remove('is-active');
+        introStage2.classList.add('is-active');
+      }, 250);
+    }
+  }
+  requestAnimationFrame(tickLoader);
+
+  showPortfolioBtn.addEventListener('click', () => {
+    introOverlay.classList.add('intro-hidden');
+    document.documentElement.classList.remove('intro-locked');
+    document.body.classList.remove('intro-locked');
+    if (introPetalTimer) clearInterval(introPetalTimer);
+    setTimeout(() => introOverlay.remove(), 950);
+  });
+
   // ---- Ambient page-wide falling petals ----
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!prefersReducedMotion) {
